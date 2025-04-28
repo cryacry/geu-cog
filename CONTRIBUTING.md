@@ -49,7 +49,7 @@ You can also create a git hook which will sign off all your commits automaticall
 First, create the hook file and make it executable:
 
 ```sh
-cd your/checkout/of/cog
+cd your/checkout/of/geu_cog
 touch .git/hooks/prepare-commit-msg
 chmod +x .git/hooks/prepare-commit-msg
 ```
@@ -186,8 +186,8 @@ make install
 pip install -r requirements-dev.txt
 make test
 cd test-integration/test_integration/fixtures/file-project
-cog build
-docker run -p 5001:5000 --init --platform=linux/amd64 cog-file-project
+geu_cog build
+docker run -p 5001:5000 --init --platform=linux/amd64 geu_cog-file-project
 ```
 
 Then visit [localhost:5001](http://localhost:5001) in your browser.

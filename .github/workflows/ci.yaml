@@ -79,7 +79,7 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Build
-        run: make cog
+        run: make geu_cog
       - name: Test
         run: make test-go
 
@@ -112,7 +112,7 @@ jobs:
           uv pip install --system tox
       - run: uv pip install --system tox-uv
       - name: Remove src to ensure tests run against wheel
-        run: rm -rf python/cog
+        run: rm -rf python/geu_cog
       - name: Test
         run: python -Im tox run --installpkg "$COG_WHEEL" -e ${{ env.TOX_PYTHON }}-pydantic${{ matrix.pydantic }}-tests
 

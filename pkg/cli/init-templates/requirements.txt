@@ -7,7 +7,7 @@
 # torchvision==0.17.1
 
 
-# You can also add Git repos as dependencies, but you'll need to add git to the system_packages list in cog.yaml:
+# You can also add Git repos as dependencies, but you'll need to add git to the system_packages list in geu_cog.yaml:
 # 
 # build:
 #   system_packages:

@@ -23,14 +23,14 @@ theme:
   font:
     text: "Roboto"
     code: "Roboto Mono"
-  favicon: cog.png
+  favicon: geu_cog.png
 
   # Display a link to edit pages right on GitHub
   features:
     - content.action.edit
 
   icon:
-    logo: material/cog
+    logo: material/geu_cog
     repo: simple/github
   palette:
     # Palette toggle for light mode

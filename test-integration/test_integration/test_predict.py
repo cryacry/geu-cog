@@ -17,7 +17,7 @@ DEFAULT_TIMEOUT = 60
 def test_predict_takes_string_inputs_and_returns_strings_to_stdout():
     project_dir = Path(__file__).parent / "fixtures/string-project"
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "s=world"],
+        ["geu_cog", "predict", "--debug", "-i", "s=world"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -33,7 +33,7 @@ def test_predict_takes_string_inputs_and_returns_strings_to_stdout():
 def test_predict_supports_async_predictors():
     project_dir = Path(__file__).parent / "fixtures/async-string-project"
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "s=world"],
+        ["geu_cog", "predict", "--debug", "-i", "s=world"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -47,7 +47,7 @@ def test_predict_supports_async_predictors():
 def test_predict_takes_int_inputs_and_returns_ints_to_stdout():
     project_dir = Path(__file__).parent / "fixtures/int-project"
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "num=2"],
+        ["geu_cog", "predict", "--debug", "-i", "num=2"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -66,7 +66,7 @@ def test_predict_takes_file_inputs(tmpdir_factory):
     with open(out_dir / "input.txt", "w", encoding="utf-8") as fh:
         fh.write("what up")
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "path=@" + str(out_dir / "input.txt")],
+        ["geu_cog", "predict", "--debug", "-i", "path=@" + str(out_dir / "input.txt")],
         cwd=out_dir,
         check=True,
         capture_output=True,
@@ -82,7 +82,7 @@ def test_predict_writes_files_to_files(tmpdir_factory):
     out_dir = pathlib.Path(tmpdir_factory.mktemp("project"))
     shutil.copytree(project_dir, out_dir, dirs_exist_ok=True)
     result = subprocess.run(
-        ["cog", "predict", "--debug"],
+        ["geu_cog", "predict", "--debug"],
         cwd=out_dir,
         check=True,
         capture_output=True,
@@ -100,7 +100,7 @@ def test_predict_writes_files_to_files_with_custom_name(tmpdir_factory):
     out_dir = pathlib.Path(tmpdir_factory.mktemp("project"))
     shutil.copytree(project_dir, out_dir, dirs_exist_ok=True)
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-o", out_dir / "myoutput.bmp"],
+        ["geu_cog", "predict", "--debug", "-o", out_dir / "myoutput.bmp"],
         cwd=out_dir,
         check=True,
         capture_output=True,
@@ -120,7 +120,7 @@ def test_predict_writes_multiple_files_to_files(tmpdir_factory):
     shutil.copytree(project_dir, out_dir, dirs_exist_ok=True)
 
     result = subprocess.run(
-        ["cog", "predict"],
+        ["geu_cog", "predict"],
         cwd=out_dir,
         check=True,
         capture_output=True,
@@ -142,7 +142,7 @@ def test_predict_writes_strings_to_files(tmpdir_factory):
     project_dir = Path(__file__).parent / "fixtures/string-project"
     out_dir = pathlib.Path(tmpdir_factory.mktemp("project"))
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "s=world", "-o", out_dir / "out.txt"],
+        ["geu_cog", "predict", "--debug", "-i", "s=world", "-o", out_dir / "out.txt"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -160,15 +160,15 @@ def test_predict_runs_an_existing_image(docker_image, tmpdir_factory):
     project_dir = Path(__file__).parent / "fixtures/string-project"
 
     subprocess.run(
-        ["cog", "build", "--debug", "-t", docker_image],
+        ["geu_cog", "build", "--debug", "-t", docker_image],
         cwd=project_dir,
         check=True,
     )
 
-    # Run in another directory to ensure it doesn't use cog.yaml
+    # Run in another directory to ensure it doesn't use geu_cog.yaml
     another_directory = tmpdir_factory.mktemp("project")
     result = subprocess.run(
-        ["cog", "predict", "--debug", docker_image, "-i", "s=world"],
+        ["geu_cog", "predict", "--debug", docker_image, "-i", "s=world"],
         cwd=another_directory,
         capture_output=True,
         text=True,
@@ -187,10 +187,10 @@ def test_predict_with_remote_image(tmpdir_factory):
     image_name = "r8.im/replicate/hello-world@sha256:5c7d5dc6dd8bf75c1acaa8565735e7986bc5b66206b55cca93cb72c9bf15ccaa"
     subprocess.run(["docker", "rmi", "-f", image_name], check=True)
 
-    # Run in another directory to ensure it doesn't use cog.yaml
+    # Run in another directory to ensure it doesn't use geu_cog.yaml
     another_directory = tmpdir_factory.mktemp("project")
     result = subprocess.run(
-        ["cog", "predict", image_name, "-i", "text=world"],
+        ["geu_cog", "predict", image_name, "-i", "text=world"],
         cwd=another_directory,
         check=True,
         capture_output=True,
@@ -199,14 +199,14 @@ def test_predict_with_remote_image(tmpdir_factory):
     )
 
     # lots of docker pull logs are written to stdout before writing the actual output
-    # TODO: clean up docker output so cog predict is always clean
+    # TODO: clean up docker output so geu_cog predict is always clean
     assert result.stdout.strip().endswith("hello world")
 
 
 def test_predict_in_subdirectory_with_imports(tmpdir_factory):
     project_dir = Path(__file__).parent / "fixtures/subdirectory-project"
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "s=world"],
+        ["geu_cog", "predict", "--debug", "-i", "s=world"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -233,7 +233,7 @@ def test_predict_many_inputs(tmpdir_factory):
         fh.write("world")
     with open(out_dir / "image.jpg", "w", encoding="utf-8") as fh:
         fh.write("")
-    cmd = ["cog", "--debug", "predict"]
+    cmd = ["geu_cog", "--debug", "predict"]
 
     for k, v in inputs.items():
         cmd += ["-i", f"{k}={v}"]
@@ -254,7 +254,7 @@ def test_predict_many_inputs_with_existing_image(docker_image, tmpdir_factory):
     project_dir = Path(__file__).parent / "fixtures/many-inputs-project"
 
     subprocess.run(
-        ["cog", "build", "--debug", "-t", docker_image],
+        ["geu_cog", "build", "--debug", "-t", docker_image],
         cwd=project_dir,
         check=True,
     )
@@ -272,7 +272,7 @@ def test_predict_many_inputs_with_existing_image(docker_image, tmpdir_factory):
         fh.write("world")
     with open(out_dir / "image.jpg", "w", encoding="utf-8") as fh:
         fh.write("")
-    cmd = ["cog", "--debug", "predict", docker_image]
+    cmd = ["geu_cog", "--debug", "predict", docker_image]
 
     for k, v in inputs.items():
         cmd += ["-i", f"{k}={v}"]
@@ -296,7 +296,7 @@ def test_predict_path_list_input(tmpdir_factory):
         fh.write("test1")
     with open(out_dir / "2.txt", "w", encoding="utf-8") as fh:
         fh.write("test2")
-    cmd = ["cog", "predict", "-i", "paths=@1.txt", "-i", "paths=@2.txt"]
+    cmd = ["geu_cog", "predict", "-i", "paths=@1.txt", "-i", "paths=@2.txt"]
 
     result = subprocess.run(
         cmd,
@@ -375,7 +375,7 @@ async def test_concurrent_predictions():
 def test_predict_new_union_project(tmpdir_factory):
     project_dir = Path(__file__).parent / "fixtures/new-union-project"
     result = subprocess.run(
-        ["cog", "predict", "--debug", "-i", "text=world"],
+        ["geu_cog", "predict", "--debug", "-i", "text=world"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -395,14 +395,14 @@ def test_predict_with_fast_build_with_local_image(docker_image):
         handle.write("\0")
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image, "--x-fast", "--x-localimage"],
+        ["geu_cog", "build", "-t", docker_image, "--x-fast", "--x-localimage"],
         cwd=project_dir,
         capture_output=True,
     )
 
     result = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "predict",
             docker_image,
             "--x-fast",
@@ -422,7 +422,7 @@ def test_predict_with_fast_build_with_local_image(docker_image):
 def test_predict_optional_project(tmpdir_factory):
     project_dir = Path(__file__).parent / "fixtures/optional-project"
     result = subprocess.run(
-        ["cog", "predict", "--debug"],
+        ["geu_cog", "predict", "--debug"],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -438,14 +438,14 @@ def test_predict_complex_types(docker_image):
     project_dir = Path(__file__).parent / "fixtures/complex-types"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image, "--x-fast", "--x-localimage"],
+        ["geu_cog", "build", "-t", docker_image, "--x-fast", "--x-localimage"],
         cwd=project_dir,
         capture_output=True,
     )
     assert build_process.returncode == 0
     result = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "predict",
             "--debug",
             docker_image,
@@ -465,13 +465,13 @@ def test_predict_complex_types(docker_image):
 def test_predict_overrides_project(docker_image):
     project_dir = Path(__file__).parent / "fixtures/overrides-project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
     assert build_process.returncode == 0
     result = subprocess.run(
-        ["cog", "predict", "--debug", docker_image],
+        ["geu_cog", "predict", "--debug", docker_image],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -485,13 +485,13 @@ def test_predict_overrides_project(docker_image):
 def test_predict_zsh_package(docker_image):
     project_dir = Path(__file__).parent / "fixtures/zsh-package"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
     assert build_process.returncode == 0
     result = subprocess.run(
-        ["cog", "predict", "--debug", docker_image],
+        ["geu_cog", "predict", "--debug", docker_image],
         cwd=project_dir,
         check=True,
         capture_output=True,
@@ -506,13 +506,13 @@ def test_predict_zsh_package(docker_image):
 def test_predict_string_list(docker_image):
     project_dir = Path(__file__).parent / "fixtures/string-list-project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
     assert build_process.returncode == 0
     result = subprocess.run(
-        ["cog", "predict", "--debug", docker_image, "-i", "s=world"],
+        ["geu_cog", "predict", "--debug", docker_image, "-i", "s=world"],
         cwd=project_dir,
         check=True,
         capture_output=True,

@@ -51,7 +51,7 @@ func initCommand(args []string) error {
 	}
 
 	fileContentMap := map[string][]byte{
-		"cog.yaml":                    cogYamlContent,
+		"geu_cog.yaml":                cogYamlContent,
 		"predict.py":                  predictPyContent,
 		".dockerignore":               dockerignoreContent,
 		".github/workflows/push.yaml": actionsWorkflowContent,

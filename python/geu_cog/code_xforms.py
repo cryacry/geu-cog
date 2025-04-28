@@ -4,7 +4,7 @@ import types
 from typing import List, Optional, Set, Tuple, Union
 
 COG_IMPORT_MODULES = {
-    "cog",
+    "geu_cog",
     "typing",
     "typing_extensions",
     "sys",
@@ -316,7 +316,7 @@ def strip_model_source_code(
             ]
         )
     else:
-        # use class_name specified in cog.yaml as method_name
+        # use class_name specified in geu_cog.yaml as method_name
         method_names = class_names
         function_source = extract_function_source(source_code, method_names)
         if not function_source:

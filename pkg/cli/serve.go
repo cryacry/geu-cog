@@ -65,7 +65,7 @@ func cmdServe(cmd *cobra.Command, arg []string) error {
 	args := []string{
 		"python",
 		"--check-hash-based-pycs", "never",
-		"-m", "cog.server.http",
+		"-m", "geu_cog.server.http",
 		"--await-explicit-shutdown", "true",
 	}
 

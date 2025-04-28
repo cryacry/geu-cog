@@ -54,7 +54,7 @@ if PYDANTIC_V2:
 else:
     from pydantic.fields import Undefined as PydanticUndefined
 
-log = structlog.get_logger("cog.server.predictor")
+log = structlog.get_logger("geu_cog.server.predictor")
 
 ALLOWED_INPUT_TYPES: List[Type[Any]] = [
     str,
@@ -222,7 +222,7 @@ def validate_input_type(
         else:
             if PYDANTIC_V2:
                 # Cog types are exported as `Annotated[Type, ...]`, but `type` is the inner type
-                if hasattr(type, "__module__") and type.__module__ == "cog.types":
+                if hasattr(type, "__module__") and type.__module__ == "geu_cog.types":
                     return
 
             raise TypeError(
@@ -364,9 +364,9 @@ For example:
         # Annotated allows us to attach Field annotations to the list, which we use to mark that this is an iterator
         # https://pydantic-docs.helpmanual.io/usage/schema/#typingannotated-fields
         if PYDANTIC_V2:
-            field = Field(**{"json_schema_extra": {"x-cog-array-type": "iterator"}})  # type: ignore
+            field = Field(**{"json_schema_extra": {"x-geu_cog-array-type": "iterator"}})  # type: ignore
         else:
-            field = Field(**{"x-cog-array-type": "iterator"})  # type: ignore
+            field = Field(**{"x-geu_cog-array-type": "iterator"})  # type: ignore
         OutputType: Type[BaseModel] = Annotated[List[get_args(OutputType)[0]], field]  # type: ignore
 
     name = OutputType.__name__ if hasattr(OutputType, "__name__") else ""
@@ -499,9 +499,9 @@ For example:
 
 def human_readable_type_name(t: Type[Union[Any, None]]) -> str:
     """
-    Generates a useful-for-humans label for a type. For builtin types, it's just the class name (eg "str" or "int"). For other types, it includes the module (eg "pathlib.Path" or "cog.File").
+    Generates a useful-for-humans label for a type. For builtin types, it's just the class name (eg "str" or "int"). For other types, it includes the module (eg "pathlib.Path" or "geu_cog.File").
 
-    The special case for Cog modules is because the type lives in `cog.types` internally, but just `cog` when included as a dependency.
+    The special case for Cog modules is because the type lives in `geu_cog.types` internally, but just `geu_cog` when included as a dependency.
     """
 
     if hasattr(t, "__module__"):
@@ -510,8 +510,8 @@ def human_readable_type_name(t: Type[Union[Any, None]]) -> str:
         if module == "builtins":
             return t.__qualname__
 
-        if module.split(".")[0] == "cog":
-            module = "cog"
+        if module.split(".")[0] == "geu_cog":
+            module = "geu_cog"
 
         try:
             return f"{module}.{t.__qualname__}"

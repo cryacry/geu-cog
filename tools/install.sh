@@ -14,7 +14,7 @@
 # You can tweak the install location by setting the INSTALL_DIR env var when running the script.
 #   INSTALL_DIR=~/my/custom/install/location sh install.sh
 #
-# By default, cog will be installed at /usr/local/bin/cog
+# By default, geu_cog will be installed at /usr/local/bin/geu_cog
 
 
 # This install script is based on that of ohmyzsh[1], which is licensed under the MIT License
@@ -156,7 +156,7 @@ main() {
   # Check if macOS
   if [ "$(uname -s)" = "Darwin" ]; then
     echo "On macOS, it is recommended to install cog using Homebrew instead:"
-    echo \`brew install cog\`
+    echo \`brew install geu_cog\`
     echo "Do you want to continue with this installation anyway?"
     
     read -p "Continue? (y/N): " choice
@@ -168,9 +168,9 @@ main() {
 
   set_install_dir
 
-  # Check if `cog` command already exists
-  if command_exists cog; then
-    echo "A cog command already exists on your system at the following location: $(which cog)".
+  # Check if `geu_cog` command already exists
+  if command_exists geu_cog; then
+    echo "A cog command already exists on your system at the following location: $(which geu_cog)".
     echo "The installations may interfere with one another."
     echo "Do you want to continue with this installation anyway?"
     read -p "Continue? (y/N): " choice
@@ -192,10 +192,10 @@ main() {
   check_docker
   setup_cog
 
-  if command_exists cog; then
+  if command_exists geu_cog; then
     print_success
   else
-    echo 'Error: cog not installed.'
+    echo 'Error: geu_cog not installed.'
     exit 1
   fi
 }

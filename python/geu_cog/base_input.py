@@ -24,7 +24,7 @@ class BaseInput(BaseModel):
         """
         for _, value in self:
             # Handle URLPath objects specially for cleanup.
-            # Also handle pathlib.Path objects, which cog.Path is a subclass of.
+            # Also handle pathlib.Path objects, which geu_cog.Path is a subclass of.
             # A pathlib.Path object shouldn't make its way here,
             # but both have an unlink() method, so we may as well be safe.
             if isinstance(value, (URLPath, Path)):

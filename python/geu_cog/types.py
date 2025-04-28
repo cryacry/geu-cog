@@ -111,7 +111,7 @@ class Secret(pydantic.SecretStr):
                 {
                     "type": "string",
                     "format": "password",
-                    "x-cog-secret": True,
+                    "x-geu_cog-secret": True,
                 }
             )
             return json_schema
@@ -125,7 +125,7 @@ class Secret(pydantic.SecretStr):
                 {
                     "type": "string",
                     "format": "password",
-                    "x-cog-secret": True,
+                    "x-geu_cog-secret": True,
                 }
             )
 
@@ -422,8 +422,8 @@ Item = TypeVar("Item")
 _concatenate_iterator_schema = {
     "type": "array",
     "items": {"type": "string"},
-    "x-cog-array-type": "iterator",
-    "x-cog-array-display": "concatenate",
+    "x-geu_cog-array-type": "iterator",
+    "x-geu_cog-array-display": "concatenate",
 }
 
 

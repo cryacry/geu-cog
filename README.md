@@ -97,14 +97,14 @@ $ curl http://localhost:8080/predictions -X POST \
 In development, you can also run arbitrary commands inside the Docker environment:
 
 ```console
-$ cog run python train.py
+$ geu_cog run python train.py
 ...
 ```
 
 Or, [spin up a Jupyter notebook](docs/notebooks.md):
 
 ```console
-$ cog run -p 8888 jupyter notebook --allow-root --ip=0.0.0.0
+$ geu_cog run -p 8888 jupyter notebook --allow-root --ip=0.0.0.0
 ```
 -->
 
@@ -138,7 +138,7 @@ You can also download and install the latest release using our
 
 ```sh
 # fish shell
-sh (curl -fsSL https://cog.run/install.sh | psub)
+sh (curl -fsSL https://geu_cog.run/install.sh | psub)
 
 # bash, zsh, and other shells
 sh <(curl -fsSL https://cog.run/install.sh)

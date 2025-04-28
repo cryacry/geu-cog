@@ -34,7 +34,7 @@ func FastPush(ctx context.Context, image string, projectDir string, command comm
 	)
 
 	// Reading weights metadata only
-	tmpWeightsDir := filepath.Join(projectDir, ".cog", "tmp", "weights")
+	tmpWeightsDir := filepath.Join(projectDir, ".geu_cog", "tmp", "weights")
 	weights, err := weights.ReadFastWeights(tmpWeightsDir)
 	if err != nil {
 		return fmt.Errorf("read weights error: %w", err)

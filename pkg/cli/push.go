@@ -21,7 +21,7 @@ func newPushCommand() *cobra.Command {
 		Use: "push [IMAGE]",
 
 		Short:   "Build and push model in current directory to a Docker registry",
-		Example: `cog push r8.im/your-username/hotdog-detector`,
+		Example: `geu_cog push r8.im/your-username/hotdog-detector`,
 		RunE:    push,
 		Args:    cobra.MaximumNArgs(1),
 	}
@@ -56,7 +56,7 @@ func push(cmd *cobra.Command, args []string) error {
 	}
 
 	if imageName == "" {
-		return fmt.Errorf("To push images, you must either set the 'image' option in cog.yaml or pass an image name as an argument. For example, 'cog push r8.im/your-username/hotdog-detector'")
+		return fmt.Errorf("To push images, you must either set the 'image' option in geu_cog.yaml or pass an image name as an argument. For example, 'geu_cog push r8.im/your-username/hotdog-detector'")
 	}
 
 	replicatePrefix := fmt.Sprintf("%s/", global.ReplicateRegistryHost)
@@ -76,7 +76,7 @@ func push(cmd *cobra.Command, args []string) error {
 		// Don't insert build ID but continue anyways
 		console.Debugf("Failed to create build ID %v", err)
 	} else {
-		annotations["run.cog.push_id"] = buildID.String()
+		annotations["run.geu_cog.push_id"] = buildID.String()
 	}
 
 	startBuildTime := time.Now()
@@ -104,8 +104,8 @@ func push(cmd *cobra.Command, args []string) error {
 				"\n\n"+
 				"If the model already exists, you may be getting this error "+
 				"because you're not logged in as owner of the model. "+
-				"This can happen if you did `sudo cog login` instead of `cog login` "+
-				"or `sudo cog push` instead of `cog push`, "+
+				"This can happen if you did `sudo geu_cog login` instead of `geu_cog login` "+
+				"or `sudo geu_cog push` instead of `geu_cog push`, "+
 				"which causes Docker to use the wrong Docker credentials.",
 				imageName)
 		}

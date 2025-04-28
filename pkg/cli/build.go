@@ -27,12 +27,12 @@ var buildPrecompile bool
 var buildFast bool
 var buildLocalImage bool
 
-const useCogBaseImageFlagKey = "use-cog-base-image"
+const useCogBaseImageFlagKey = "use-geu_cog-base-image"
 
 func newBuildCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "build",
-		Short:   "Build an image from cog.yaml",
+		Short:   "Build an image from geu_cog.yaml",
 		Args:    cobra.NoArgs,
 		RunE:    buildCommand,
 		PreRunE: checkMutuallyExclusiveFlags,
@@ -114,7 +114,7 @@ func addUseCudaBaseImageFlag(cmd *cobra.Command) {
 }
 
 func addDockerfileFlag(cmd *cobra.Command) {
-	cmd.Flags().StringVar(&buildDockerfileFile, "dockerfile", "", "Path to a Dockerfile. If set, cog will use this Dockerfile instead of generating one from cog.yaml")
+	cmd.Flags().StringVar(&buildDockerfileFile, "dockerfile", "", "Path to a Dockerfile. If set, geu_cog will use this Dockerfile instead of generating one from geu_cog.yaml")
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
 		if f.Name == "dockerfile" {
 			f.Hidden = true

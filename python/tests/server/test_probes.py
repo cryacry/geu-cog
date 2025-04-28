@@ -53,4 +53,4 @@ def test_no_exception_when_probe_dir_exists(tmpdir, caplog):
     p = ProbeHelper(root=root)
     p.ready()
 
-    assert "Failed to create cog runtime state directory" in caplog.text
+    assert "Failed to create geu_cog runtime state directory" in caplog.text

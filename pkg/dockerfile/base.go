@@ -273,7 +273,7 @@ func BaseImageName(cudaVersion string, pythonVersion string, torchVersion string
 		tag = "latest"
 	}
 
-	return global.ReplicateRegistryHost + "/cog-base:" + tag
+	return global.ReplicateRegistryHost + "/geu_cog-base:" + tag
 }
 
 func BaseImageConfigurationExists(cudaVersion, pythonVersion, torchVersion string) (bool, string, string, string) {

@@ -9,13 +9,14 @@ import sys
 import textwrap
 import threading
 import traceback
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from enum import Enum, auto, unique
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Optional, Type
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Optional, Type, AsyncGenerator
 
 import structlog
 import uvicorn
-from fastapi import Body, FastAPI, Header, Path, Response
+from fastapi import Body, FastAPI, Header, Path, Response, APIRouter
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.utils import get_openapi
@@ -58,7 +59,7 @@ if TYPE_CHECKING:
     P = ParamSpec("P")  # pylint: disable=invalid-name
     T = TypeVar("T")  # pylint: disable=invalid-name
 
-log = structlog.get_logger("cog.server.http")
+log = structlog.get_logger("geu_cog.server.http")
 
 
 @unique
@@ -118,10 +119,41 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
     is_build: bool = False,
     await_explicit_shutdown: bool = False,  # pylint: disable=redefined-outer-name
 ) -> MyFastAPI:
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        # 启动时执行
+        await startup()  # 示例函数
+
+        yield  # 暂停，直到应用关闭
+
+        # 关闭时执行
+        await shutdown()  # 示例函数
+
+    async def startup() -> None:
+        # check for early setup failures
+        if (
+                app.state.setup_result
+                and app.state.setup_result.status == schema.Status.FAILED
+        ):
+            # signal shutdown if interactive run
+            if shutdown_event and not await_explicit_shutdown:
+                shutdown_event.set()
+        else:
+            setup_task = runner.setup()
+            setup_task.add_done_callback(_handle_setup_done)
+
+    async def shutdown() -> None:
+        worker.terminate()
+
     app = MyFastAPI(  # pylint: disable=redefined-outer-name
         title="Cog",  # TODO: mention model name?
         # version=None # TODO
+        lifespan=lifespan
     )
+
+    # 创建 API Router，并设定一个前缀
+    api_router = APIRouter(prefix=cog_config.openapi_prefix)
 
     def custom_openapi() -> Dict[str, Any]:
         if not app.openapi_schema:
@@ -148,7 +180,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
     started_at = datetime.now(tz=timezone.utc)
 
     # shutdown is needed no matter what happens
-    @app.post("/shutdown")
+    @api_router.post("/shutdown")
     async def start_shutdown() -> Any:
         log.info("shutdown requested via http")
         if shutdown_event:
@@ -216,7 +248,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
                 input_type=TrainingInputType, output_type=TrainingOutputType
             )
 
-            @app.post(
+            @api_router.post(
                 "/trainings",
                 response_model=TrainingResponse,
                 response_model_exclude_unset=True,
@@ -240,7 +272,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
                         respond_async=respond_async,
                     )
 
-            @app.put(
+            @api_router.put(
                 "/trainings/{training_id}",
                 response_model=TrainingResponse,
                 response_model_exclude_unset=True,
@@ -288,7 +320,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
                         respond_async=respond_async,
                     )
 
-            @app.post("/trainings/{training_id}/cancel")
+            @api_router.post("/trainings/{training_id}/cancel")
             def cancel_training(
                 training_id: str = Path(..., title="Training ID"),
             ) -> Any:
@@ -311,29 +343,11 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
                 add_setup_failed_routes(app, started_at, msg)
                 return app
 
-    @app.on_event("startup")
-    def startup() -> None:
-        # check for early setup failures
-        if (
-            app.state.setup_result
-            and app.state.setup_result.status == schema.Status.FAILED
-        ):
-            # signal shutdown if interactive run
-            if shutdown_event and not await_explicit_shutdown:
-                shutdown_event.set()
-        else:
-            setup_task = runner.setup()
-            setup_task.add_done_callback(_handle_setup_done)
-
-    @app.on_event("shutdown")
-    def shutdown() -> None:
-        worker.terminate()
-
-    @app.get("/")
+    @api_router.get("/")
     async def root() -> Any:
         return index_document
 
-    @app.get("/health-check")
+    @api_router.get("/health-check")
     async def healthcheck() -> Any:
         if app.state.health == Health.READY:
             health = Health.BUSY if runner.is_busy() else Health.READY
@@ -343,7 +357,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
         return jsonable_encoder({"status": health.name, "setup": setup})
 
     @limited
-    @app.post(
+    @api_router.post(
         "/predictions",
         response_model=PredictionResponse,
         response_model_exclude_unset=True,
@@ -368,7 +382,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
             )
 
     @limited
-    @app.put(
+    @api_router.put(
         "/predictions/{prediction_id}",
         response_model=PredictionResponse,
         response_model_exclude_unset=True,
@@ -481,7 +495,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
         encoded_response = jsonable_encoder(response_object)
         return JSONResponse(content=encoded_response)
 
-    @app.post("/predictions/{prediction_id}/cancel")
+    @api_router.post("/predictions/{prediction_id}/cancel")
     async def cancel(prediction_id: str = Path(..., title="Prediction ID")) -> Any:
         """
         Cancel a running prediction
@@ -517,6 +531,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
         else:
             log.error("awaiting explicit shutdown")
 
+    app.include_router(api_router)
     return app
 
 
@@ -630,12 +645,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.version:
-        print(f"cog.server.http {__version__}")
+        print(f"geu_cog.server.http {__version__}")
         sys.exit(0)
 
-    # log level is configurable so we can make it quiet or verbose for `cog predict`
-    # cog predict --debug       # -> debug
-    # cog predict               # -> warning
+    # log level is configurable so we can make it quiet or verbose for `geu_cog predict`
+    # geu_cog predict --debug       # -> debug
+    # geu_cog predict               # -> warning
     # docker run <image-name>   # -> info (default)
     log_level = logging.getLevelName(os.environ.get("COG_LOG_LEVEL", "INFO").upper())
     setup_logging(log_level=log_level)
@@ -683,7 +698,7 @@ if __name__ == "__main__":
 
     s.stop()
 
-    # return error exit code when setup failed and cog is running in interactive mode (not k8s)
+    # return error exit code when setup failed and geu_cog is running in interactive mode (not k8s)
     if (
         app.state.setup_result
         and app.state.setup_result.status == schema.Status.FAILED

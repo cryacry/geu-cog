@@ -298,8 +298,8 @@ OPENAPI_TYPES = {
     "float": "number",
     "bool": "boolean",
     "list": "array",
-    "cog.Path": "string",
-    "cog.File": "string",
+    "geu_cog.Path": "string",
+    "geu_cog.File": "string",
     "Path": "string",
     "File": "string",
 }
@@ -436,8 +436,8 @@ def parse_class(classdef: ast.AST) -> "JSONDict":
 # int: an integer
 # float: a floating point number
 # bool: a boolean
-# cog.File: a file-like object representing a file
-# cog.Path: a path to a file on disk
+# geu_cog.File: a file-like object representing a file
+# geu_cog.Path: a path to a file on disk
 
 BASE_TYPES = ["str", "int", "float", "bool", "File", "Path"]
 
@@ -484,9 +484,9 @@ For example:
         # forget about other subscripts like Optional, and assume otherlib.File will still be an uri
         slice = resolve_name(annotation.slice)  # pylint: disable=redefined-builtin
         format = {"format": "uri"} if slice in ("Path", "File") else {}  # pylint: disable=redefined-builtin
-        array_type = {"x-cog-array-type": "iterator"} if "Iterator" in name else {}
+        array_type = {"x-geu_cog-array-type": "iterator"} if "Iterator" in name else {}
         display_type = (
-            {"x-cog-array-display": "concatenate"} if "Concatenate" in name else {}
+            {"x-geu_cog-array-display": "concatenate"} if "Concatenate" in name else {}
         )
         return {}, {
             "title": "Output",

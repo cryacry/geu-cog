@@ -38,7 +38,7 @@ func setupGitWorkTree(t *testing.T) string {
 	r.NoError(os.MkdirAll(tmp, 0o755))
 
 	gitRun([]string{"init", tmp}, t)
-	gitRun([]string{"-C", tmp, "config", "user.email", "cog@localhost"}, t)
+	gitRun([]string{"-C", tmp, "config", "user.email", "geu_cog@localhost"}, t)
 	gitRun([]string{"-C", tmp, "config", "user.name", "Cog Tests"}, t)
 	gitRun([]string{"-C", tmp, "commit", "--allow-empty", "-m", "walrus"}, t)
 	gitRun([]string{"-C", tmp, "tag", "-a", "v0.0.1+walrus", "-m", "walrus time"}, t)

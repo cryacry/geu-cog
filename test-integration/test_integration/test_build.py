@@ -11,7 +11,7 @@ from .util import assert_versions_match
 def test_build_without_predictor(docker_image):
     project_dir = Path(__file__).parent / "fixtures/no-predictor-project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -23,7 +23,7 @@ def test_build_without_predictor(docker_image):
 
 
 def test_build_names_uses_image_option_in_cog_yaml(tmpdir, docker_image):
-    with open(tmpdir / "cog.yaml", "w") as f:
+    with open(tmpdir / "geu_cog.yaml", "w") as f:
         cog_yaml = f"""
 image: {docker_image}
 build:
@@ -34,7 +34,7 @@ predict: predict.py:Predictor
 
     with open(tmpdir / "predict.py", "w") as f:
         code = """
-from cog import BasePredictor
+from geu_cog import BasePredictor
 
 class Predictor(BasePredictor):
     def predict(self, text: str) -> str:
@@ -44,7 +44,7 @@ class Predictor(BasePredictor):
         f.write(code)
 
     subprocess.run(
-        ["cog", "build"],
+        ["geu_cog", "build"],
         cwd=tmpdir,
         check=True,
     )
@@ -56,7 +56,7 @@ class Predictor(BasePredictor):
 def test_build_with_model(docker_image):
     project_dir = Path(__file__).parent / "fixtures/path-project"
     subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         check=True,
     )
@@ -68,7 +68,7 @@ def test_build_with_model(docker_image):
         ).stdout
     )
     labels = image[0]["Config"]["Labels"]
-    schema = json.loads(labels["run.cog.openapi_schema"])
+    schema = json.loads(labels["run.geu_cog.openapi_schema"])
 
     assert schema["components"]["schemas"]["Input"] == {
         "title": "Input",
@@ -89,7 +89,7 @@ def test_build_with_model(docker_image):
 def test_build_invalid_schema(docker_image):
     project_dir = Path(__file__).parent / "fixtures/invalid-int-project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -99,7 +99,7 @@ def test_build_invalid_schema(docker_image):
 
 @pytest.mark.skipif(os.environ.get("CI") != "true", reason="only runs in CI")
 def test_build_gpu_model_on_cpu(tmpdir, docker_image):
-    with open(tmpdir / "cog.yaml", "w") as f:
+    with open(tmpdir / "geu_cog.yaml", "w") as f:
         cog_yaml = """
 build:
   python_version: 3.8
@@ -110,7 +110,7 @@ predict: predict.py:Predictor
 
     with open(tmpdir / "predict.py", "w") as f:
         code = """
-from cog import BasePredictor
+from geu_cog import BasePredictor
 
 class Predictor(BasePredictor):
     def predict(self, text: str) -> str:
@@ -148,7 +148,7 @@ class Predictor(BasePredictor):
     )
 
     subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=tmpdir,
         check=True,
     )
@@ -164,8 +164,8 @@ class Predictor(BasePredictor):
     )
     labels = image[0]["Config"]["Labels"]
 
-    assert len(labels["run.cog.version"]) > 0
-    assert json.loads(labels["run.cog.config"]) == {
+    assert len(labels["run.geu_cog.version"]) > 0
+    assert json.loads(labels["run.geu_cog.config"]) == {
         "build": {
             "python_version": "3.8",
             "gpu": True,
@@ -174,7 +174,7 @@ class Predictor(BasePredictor):
         },
         "predict": "predict.py:Predictor",
     }
-    assert "run.cog.openapi_schema" in labels
+    assert "run.geu_cog.openapi_schema" in labels
 
     assert len(labels["org.opencontainers.image.version"]) > 0
     assert len(labels["org.opencontainers.image.revision"]) > 0
@@ -182,38 +182,38 @@ class Predictor(BasePredictor):
 
 def test_build_with_cog_init_templates(tmpdir, docker_image):
     subprocess.run(
-        ["cog", "init"],
+        ["geu_cog", "init"],
         cwd=tmpdir,
         capture_output=True,
         check=True,
     )
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=tmpdir,
         capture_output=True,
         check=True,
     )
 
     assert build_process.returncode == 0
-    assert "Image built as cog-" in build_process.stderr.decode()
+    assert "Image built as geu_cog-" in build_process.stderr.decode()
 
 
 def test_build_with_complex_output(tmpdir, docker_image):
     project_dir = Path(__file__).parent / "fixtures/complex_output_project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
     assert build_process.returncode == 0
-    assert "Image built as cog-" in build_process.stderr.decode()
+    assert "Image built as geu_cog-" in build_process.stderr.decode()
 
 
 def test_python_37_deprecated(docker_image):
     project_dir = Path(__file__).parent / "fixtures/python_37"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -227,7 +227,7 @@ def test_python_37_deprecated(docker_image):
 def test_build_base_image_sha(docker_image):
     project_dir = Path(__file__).parent / "fixtures/path-project"
     subprocess.run(
-        ["cog", "build", "-t", docker_image, "--use-cog-base-image"],
+        ["geu_cog", "build", "-t", docker_image, "--use-geu_cog-base-image"],
         cwd=project_dir,
         check=True,
     )
@@ -239,7 +239,7 @@ def test_build_base_image_sha(docker_image):
         ).stdout
     )
     labels = image[0]["Config"]["Labels"]
-    base_layer_hash = labels["run.cog.cog-base-image-last-layer-sha"]
+    base_layer_hash = labels["run.geu_cog.geu_cog-base-image-last-layer-sha"]
     layers = image[0]["RootFS"]["Layers"]
     assert base_layer_hash in layers
 
@@ -247,7 +247,7 @@ def test_build_base_image_sha(docker_image):
 def test_torch_2_0_3_cu118_base_image(docker_image):
     project_dir = Path(__file__).parent / "fixtures/torch-cuda-baseimage-project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image, "--use-cog-base-image"],
+        ["geu_cog", "build", "-t", docker_image, "--use-geu_cog-base-image"],
         cwd=project_dir,
         capture_output=True,
     )
@@ -257,7 +257,7 @@ def test_torch_2_0_3_cu118_base_image(docker_image):
 def test_torch_1_13_0_base_image_fallback(docker_image):
     project_dir = Path(__file__).parent / "fixtures/torch-baseimage-project"
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image, "--openapi-schema", "openapi.json"],
+        ["geu_cog", "build", "-t", docker_image, "--openapi-schema", "openapi.json"],
         cwd=project_dir,
         capture_output=True,
     )
@@ -268,13 +268,13 @@ def test_torch_1_13_0_base_image_fail(docker_image):
     project_dir = Path(__file__).parent / "fixtures/torch-baseimage-project"
     build_process = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "build",
             "-t",
             docker_image,
             "--openapi-schema",
             "openapi.json",
-            "--use-cog-base-image",
+            "--use-geu_cog-base-image",
         ],
         cwd=project_dir,
         capture_output=True,
@@ -286,13 +286,13 @@ def test_torch_1_13_0_base_image_fail_explicit(docker_image):
     project_dir = Path(__file__).parent / "fixtures/torch-baseimage-project"
     build_process = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "build",
             "-t",
             docker_image,
             "--openapi-schema",
             "openapi.json",
-            "--use-cog-base-image=false",
+            "--use-geu_cog-base-image=false",
         ],
         cwd=project_dir,
         capture_output=True,
@@ -304,13 +304,13 @@ def test_precompile(docker_image):
     project_dir = Path(__file__).parent / "fixtures/torch-baseimage-project"
     build_process = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "build",
             "-t",
             docker_image,
             "--openapi-schema",
             "openapi.json",
-            "--use-cog-base-image=false",
+            "--use-geu_cog-base-image=false",
             "--precompile",
         ],
         cwd=project_dir,
@@ -323,11 +323,11 @@ def test_cog_install_base_image(docker_image):
     project_dir = Path(__file__).parent / "fixtures/string-project"
     build_process = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "build",
             "-t",
             docker_image,
-            "--use-cog-base-image=true",
+            "--use-geu_cog-base-image=true",
         ],
         cwd=project_dir,
         capture_output=True,
@@ -341,7 +341,7 @@ def test_cog_install_base_image(docker_image):
             docker_image,
             "python",
             "-c",
-            "import cog; print(cog.__version__)",
+            "import geu_cog; print(geu_cog.__version__)",
         ],
         cwd=project_dir,
         capture_output=True,
@@ -350,7 +350,7 @@ def test_cog_install_base_image(docker_image):
     cog_installed_version = cog_installed_version_process.stdout.decode().strip()
     cog_version_process = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "--version",
         ],
         cwd=project_dir,
@@ -367,7 +367,7 @@ def test_cog_install_base_image(docker_image):
 def test_pip_freeze(docker_image):
     project_dir = Path(__file__).parent / "fixtures/path-project"
     subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         check=True,
     )
@@ -379,12 +379,12 @@ def test_pip_freeze(docker_image):
         ).stdout
     )
     labels = image[0]["Config"]["Labels"]
-    pip_freeze = labels["run.cog.pip_freeze"]
+    pip_freeze = labels["run.geu_cog.pip_freeze"]
     pip_freeze = "\n".join(
         [
             x
             for x in pip_freeze.split("\n")
-            if not x.startswith("cog @")
+            if not x.startswith("geu_cog @")
             and not x.startswith("fastapi")
             and not x.startswith("starlette")
         ]
@@ -399,7 +399,7 @@ def test_cog_installs_apt_packages(docker_image):
     project_dir = Path(__file__).parent / "fixtures/apt-packages"
     build_process = subprocess.run(
         [
-            "cog",
+            "geu_cog",
             "build",
             "-t",
             docker_image,
@@ -420,7 +420,7 @@ def test_fast_build(docker_image):
         handle.write("\0")
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image, "--x-fast"],
+        ["geu_cog", "build", "-t", docker_image, "--x-fast"],
         cwd=project_dir,
         capture_output=True,
     )
@@ -434,7 +434,7 @@ def test_pydantic2(docker_image):
     project_dir = Path(__file__).parent / "fixtures/pydantic2"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -446,7 +446,7 @@ def test_ffmpeg_base_image(docker_image):
     project_dir = Path(__file__).parent / "fixtures/ffmpeg-package"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -458,14 +458,14 @@ def test_bad_dockerignore(docker_image):
     project_dir = Path(__file__).parent / "fixtures/bad-dockerignore"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
 
     assert build_process.returncode == 1
     assert (
-        "The .cog tmp path cannot be ignored by docker in .dockerignore"
+        "The .geu_cog tmp path cannot be ignored by docker in .dockerignore"
         in build_process.stderr.decode()
     )
 
@@ -474,7 +474,7 @@ def test_pydantic1_none(docker_image):
     project_dir = Path(__file__).parent / "fixtures/pydantic1-none"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -490,7 +490,7 @@ def test_fast_build_with_local_image(docker_image):
         handle.write("\0")
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image, "--x-fast", "--x-localimage"],
+        ["geu_cog", "build", "-t", docker_image, "--x-fast", "--x-localimage"],
         cwd=project_dir,
         capture_output=True,
     )
@@ -504,7 +504,7 @@ def test_local_whl_install(docker_image):
     project_dir = Path(__file__).parent / "fixtures/local-whl-install"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -516,7 +516,7 @@ def test_overrides(docker_image):
     project_dir = Path(__file__).parent / "fixtures/overrides-project"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )
@@ -528,7 +528,7 @@ def test_install_requires_packaging(docker_image):
     project_dir = Path(__file__).parent / "fixtures/install-requires-packaging"
 
     build_process = subprocess.run(
-        ["cog", "build", "-t", docker_image],
+        ["geu_cog", "build", "-t", docker_image],
         cwd=project_dir,
         capture_output=True,
     )

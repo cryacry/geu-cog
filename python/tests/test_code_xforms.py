@@ -16,7 +16,7 @@ def test_train_function_model():
 
     new_source = strip_model_source_code(source_code, "train", "train")
     expected_source = """
-from cog import BaseModel, Input, Path
+from geu_cog import BaseModel, Input, Path
 class TrainingOutput(BaseModel):
     weights: Path
 def train(n: int=Input(description='Dimension of weights to generate')) -> TrainingOutput:
@@ -36,7 +36,7 @@ def test_predict_many_inputs():
 
     new_source = strip_model_source_code(source_code, ["Predictor"], ["predict"])
     expected_source = """
-from cog import BasePredictor, Input, Path
+from geu_cog import BasePredictor, Input, Path
 class Predictor(BasePredictor):
 
     def predict(self, no_default: str, default_without_input: str='default', input_with_default: int=Input(default=10), path: Path=Input(description='Some path'), image: Path=Input(description='Some path'), choices: str=Input(choices=['foo', 'bar']), int_choices: int=Input(description='hello', choices=[3, 4, 5])) -> str:
@@ -57,7 +57,7 @@ def test_predict_output_path_model():
     new_source = strip_model_source_code(source_code, ["Predictor"], ["predict"])
     expected_source = """
 import os
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 class Predictor(BasePredictor):
 
     def predict(self) -> Path:
@@ -73,7 +73,7 @@ def test_strip_model_source_code():
         """
 import io
 
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 import torch
@@ -95,7 +95,7 @@ class Predictor(BasePredictor):
     )
     assert (
         stripped_code
-        == """from cog import BasePredictor, Path
+        == """from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 class ModelOutput(BaseModel):
@@ -115,7 +115,7 @@ def test_strip_model_source_code_removes_function_decorators():
         """
 import io
 
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 import torch
@@ -139,7 +139,7 @@ class Predictor(BasePredictor):
     )
     assert (
         stripped_code
-        == """from cog import BasePredictor, Path
+        == """from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 class ModelOutput(BaseModel):
@@ -159,7 +159,7 @@ def test_strip_model_source_code_keeps_referenced_globals():
         """
 import io
 
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 import torch
@@ -185,7 +185,7 @@ class Predictor(BasePredictor):
     )
     assert (
         stripped_code
-        == """from cog import BasePredictor, Path
+        == """from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 import numpy as np
@@ -207,7 +207,7 @@ def test_strip_model_source_code_keeps_referenced_subclasses():
         """
 import io
 
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 import torch
@@ -238,7 +238,7 @@ class SchnellPredictor(Predictor):
     )
     assert (
         stripped_code
-        == """from cog import BasePredictor, Path
+        == """from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 import numpy as np
@@ -263,7 +263,7 @@ class SchnellPredictor(Predictor):
 def test_strip_model_source_code_keeps_referenced_class_from_function():
     stripped_code = strip_model_source_code(
         """
-from cog import BaseModel, Input, Path
+from geu_cog import BaseModel, Input, Path
 
 class TrainingOutput(BaseModel):
     weights: Path
@@ -284,7 +284,7 @@ def train(
     )
     assert (
         stripped_code
-        == """from cog import BaseModel, Input, Path
+        == """from geu_cog import BaseModel, Input, Path
 class TrainingOutput(BaseModel):
     weights: Path
 def train(n: int) -> TrainingOutput:

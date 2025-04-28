@@ -17,8 +17,8 @@ This guide will walk you through what you can do with Cog by using an example mo
 First, install Cog:
 
 ```bash
-sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
-sudo chmod +x /usr/local/bin/cog
+sudo curl -o /usr/local/bin/geu_cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
+sudo chmod +x /usr/local/bin/geu_cog
 
 ```
 
@@ -27,8 +27,8 @@ sudo chmod +x /usr/local/bin/cog
 Let's make a directory to work in:
 
 ```bash
-mkdir cog-quickstart
-cd cog-quickstart
+mkdir geu_cog-quickstart
+cd geu_cog-quickstart
 
 ```
 
@@ -46,7 +46,7 @@ build:
 Then, you can run any command inside this environment. For example, enter
 
 ```bash
-cog run python
+geu_cog run python
 
 ```
 
@@ -133,7 +133,7 @@ curl $IMAGE_URL > input.jpg
 Now, let's run the model using Cog:
 
 ```bash
-cog predict -i image=@input.jpg
+geu_cog predict -i image=@input.jpg
 
 ```
 
@@ -168,7 +168,7 @@ Note: The first time you run `cog predict`, the build process will be triggered 
 We can bake your model's code, the trained weights, and the Docker environment into a Docker image. This image serves predictions with an HTTP server, and can be deployed to anywhere that Docker runs to serve real-time predictions.
 
 ```bash
-cog build -t resnet
+geu_cog build -t resnet
 # Building Docker image...
 # Built resnet:latest
 
@@ -177,13 +177,13 @@ cog build -t resnet
 Once you've built the image, you can optionally view the generated dockerfile to get a sense of what Cog is doing under the hood:
 
 ```bash
-cog debug
+geu_cog debug
 ```
 
 You can run this image with `cog predict` by passing the filename as an argument:
 
 ```bash
-cog predict resnet -i image=@input.jpg
+geu_cog predict resnet -i image=@input.jpg
 
 ```
 
@@ -212,7 +212,7 @@ image: "r8.im/replicate/resnet"
 Once you've done this, you can use `cog push` to build and push the image to a Docker registry:
 
 ```bash
-cog push
+geu_cog push
 # Building r8.im/replicate/resnet...
 # Pushing r8.im/replicate/resnet...
 # Pushed!
@@ -229,13 +229,13 @@ The Docker image is now accessible to anyone or any system that has access to th
 > ├── checkpoints/
 > │   └── weights.ckpt
 > ├── predict.py
-> └── cog.yaml
+> └── geu_cog.yaml
 >
 > # ❌ No
 > .
 > ├── weights.ckpt # <- Don't put weights in root directory
 > ├── predict.py
-> └── cog.yaml
+> └── geu_cog.yaml
 >
 > # ❌ No
 > .
@@ -243,7 +243,7 @@ The Docker image is now accessible to anyone or any system that has access to th
 > │   ├── weights.ckpt
 > │   └── load_weights.py # <- Don't put code in weights directory
 > ├── predict.py
-> └── cog.yaml
+> └── geu_cog.yaml
 > ```
 
 ## Next steps

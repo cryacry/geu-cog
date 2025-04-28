@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var prefixesToIgnore = []string{".cog", ".git", "__pycache__"}
+var prefixesToIgnore = []string{".geu_cog", ".git", "__pycache__"}
 
 var suffixesToIgnore = []string{
 	".py", ".ipynb", ".whl", // Python projects

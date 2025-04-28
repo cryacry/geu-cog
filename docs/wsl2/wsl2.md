@@ -158,15 +158,15 @@ wsl.exe
 Download and install `cog` inside the VM:
 
 ```bash
-sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
-sudo chmod +x /usr/local/bin/cog
+sudo curl -o /usr/local/bin/geu_cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
+sudo chmod +x /usr/local/bin/geu_cog
 ```
 
 Make sure it's available by typing:
 
 ```bash
-which cog # should output /usr/local/bin/cog
-cog --version # should output the cog version number.
+which geu_cog # should output /usr/local/bin/geu_cog
+geu_cog --version # should output the geu_cog version number.
 ```
 
 ## 8. Run a model in WSL 2
@@ -174,7 +174,7 @@ cog --version # should output the cog version number.
 Finally, make sure it works. Let's try running `afiaka87/glid-3-xl` locally:
 
 ```bash
-cog predict 'r8.im/afiaka87/glid-3-xl' -i prompt="a fresh avocado floating in the water" -o prediction.json
+geu_cog predict 'r8.im/afiaka87/glid-3-xl' -i prompt="a fresh avocado floating in the water" -o prediction.json
 ```
 
 ![Output from a running cog prediction in Windows Terminal](images/cog_model_output.png)

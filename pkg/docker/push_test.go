@@ -64,7 +64,7 @@ func TestPush(t *testing.T) {
 	predictPyPath := filepath.Join(dir, "predict.py")
 	handle, err := os.Create(predictPyPath)
 	require.NoError(t, err)
-	handle.WriteString("import cog")
+	handle.WriteString("import geu_cog")
 	dockertest.MockCogConfig = "{\"build\":{\"python_version\":\"3.12\",\"python_packages\":[\"torch==2.5.0\",\"beautifulsoup4==4.12.3\"],\"system_packages\":[\"git\"]},\"image\":\"test\",\"predict\":\"" + predictPyPath + ":Predictor\"}"
 
 	// Setup mock docker command
@@ -120,7 +120,7 @@ func TestPushWithWeight(t *testing.T) {
 	predictPyPath := filepath.Join(dir, "predict.py")
 	handle, err := os.Create(predictPyPath)
 	require.NoError(t, err)
-	handle.WriteString("import cog")
+	handle.WriteString("import geu_cog")
 	dockertest.MockCogConfig = "{\"build\":{\"python_version\":\"3.12\",\"python_packages\":[\"torch==2.5.0\",\"beautifulsoup4==4.12.3\"],\"system_packages\":[\"git\"]},\"image\":\"test\",\"predict\":\"" + predictPyPath + ":Predictor\"}"
 
 	// Create mock weight

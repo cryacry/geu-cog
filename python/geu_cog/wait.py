@@ -11,7 +11,7 @@ COG_PYENV_PATH_ENV_VAR = "COG_PYENV_PATH"
 PYTHONPATH_ENV_VAR = "PYTHONPATH"
 PYTHON_VERSION_ENV_VAR = "R8_PYTHON_VERSION"
 
-log = structlog.get_logger("cog.wait")
+log = structlog.get_logger("geu_cog.wait")
 
 
 def _wait_flag_fallen() -> bool:

@@ -7,17 +7,17 @@ dist: ./dist/go
 env:
   - CGO_ENABLED=0
 builds:
-  - binary: cog
-    id: cog
+  - binary: geu_cog
+    id: geu_cog
     goos:
       - darwin
       - linux
     goarch:
       - amd64
       - arm64
-    main: ./cmd/cog
+    main: ./cmd/geu_cog
     ldflags:
-      - "-s -w -X github.com/replicate/cog/pkg/global.Version={{.Version}} -X github.com/replicate/cog/pkg/global.Commit={{.Commit}} -X github.com/replicate/cog/pkg/global.BuildTime={{.Date}}"
+      - "-s -w -X github.com/replicate/geu_cog/pkg/global.Version={{.Version}} -X github.com/replicate/geu_cog/pkg/global.Commit={{.Commit}} -X github.com/replicate/geu_cog/pkg/global.BuildTime={{.Date}}"
   - binary: base-image
     id: base-image
     goos:
@@ -28,11 +28,11 @@ builds:
       - arm64
     main: ./cmd/base-image
     ldflags:
-      - "-s -w -X github.com/replicate/cog/pkg/global.Version={{.Version}} -X github.com/replicate/cog/pkg/global.Commit={{.Commit}} -X github.com/replicate/cog/pkg/global.BuildTime={{.Date}}"
+      - "-s -w -X github.com/replicate/geu_cog/pkg/global.Version={{.Version}} -X github.com/replicate/geu_cog/pkg/global.Commit={{.Commit}} -X github.com/replicate/geu_cog/pkg/global.BuildTime={{.Date}}"
 archives:
   - format: binary
     builds:
-      - cog # for now we only release cog
+      - geu_cog # for now we only release geu_cog
     name_template: >-
       {{ .Binary }}_
       {{- title .Os }}_

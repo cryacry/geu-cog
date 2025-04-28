@@ -11,7 +11,7 @@ import pydantic
 
 from .types import PYDANTIC_V2
 
-BUNDLED_SCHEMA_PATH = ".cog/schema.py"
+BUNDLED_SCHEMA_PATH = ".geu_cog/schema.py"
 
 
 class Status(str, Enum):
@@ -133,7 +133,7 @@ class TrainingResponse(PredictionResponse):
 def create_schema_module() -> Optional[ModuleType]:
     if not os.path.exists(BUNDLED_SCHEMA_PATH):
         return None
-    name = "cog.bundled_schema"
+    name = "geu_cog.bundled_schema"
     spec = importlib.util.spec_from_file_location(name, BUNDLED_SCHEMA_PATH)
     assert spec is not None
     module = importlib.util.module_from_spec(spec)

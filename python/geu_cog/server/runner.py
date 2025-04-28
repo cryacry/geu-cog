@@ -35,7 +35,7 @@ from .useragent import get_user_agent
 from .webhook import SKIP_START_EVENT, webhook_caller_filtered
 from .worker import Worker, _PublicEventType
 
-log = structlog.get_logger("cog.server.runner")
+log = structlog.get_logger("geu_cog.server.runner")
 
 
 @define

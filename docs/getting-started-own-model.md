@@ -12,8 +12,8 @@ This guide will show you how to put your own machine learning model in a Docker 
 First, install Cog if you haven't already:
 
 ```sh
-sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
-sudo chmod +x /usr/local/bin/cog
+sudo curl -o /usr/local/bin/geu_cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
+sudo chmod +x /usr/local/bin/geu_cog
 ```
 
 To configure your project for use with Cog, you'll need to add two files:
@@ -25,7 +25,7 @@ Use the `cog init` command to generate these files in your project:
 
 ```sh
 $ cd path/to/your/model
-$ cog init
+$ geu_cog init
 ```
 
 ## Define the Docker environment

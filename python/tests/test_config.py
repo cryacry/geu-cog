@@ -41,7 +41,7 @@ predict: "predict.py:Predictor"
         config = Config()
         config_predict_ref = config.predictor_predict_ref
         assert config_predict_ref == "predict.py:Predictor", (
-            "Predict Reference should come from the cog config file."
+            "Predict Reference should come from the geu_cog config file."
         )
     os.chdir(pwd)
 
@@ -127,7 +127,7 @@ def test_get_predictor_types_with_env_var():
     predict_ref = "predict.py:Predictor"
     os.environ[COG_PREDICT_TYPE_STUB_ENV_VAR] = predict_ref
     os.environ[COG_PREDICT_CODE_STRIP_ENV_VAR] = """
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 
@@ -144,11 +144,11 @@ class Predictor(BasePredictor):
     input_type, output_type, is_async = config.get_predictor_types(Mode.PREDICT)
     del os.environ[COG_PREDICT_CODE_STRIP_ENV_VAR]
     del os.environ[COG_PREDICT_TYPE_STUB_ENV_VAR]
-    assert str(input_type) == "<class 'cog.predictor.Input'>", (
+    assert str(input_type) == "<class 'geu_cog.predictor.Input'>", (
         "Predict input type should be the predictor Input."
     )
     assert (
-        str(output_type) == "<class 'cog.predictor.get_output_type.<locals>.Output'>"
+        str(output_type) == "<class 'geu_cog.predictor.get_output_type.<locals>.Output'>"
     ), "Predict output type should be the predictor Output."
     assert not is_async, "is_async should be False for normal functions"
 
@@ -160,7 +160,7 @@ def test_get_predictor_types():
             handle.write("""
 import io
 
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 
@@ -179,12 +179,12 @@ class Predictor(BasePredictor):
         predict_ref = f"{predict_python_file}:Predictor"
         config = Config(config={"predict": predict_ref})
         input_type, output_type, is_async = config.get_predictor_types(Mode.PREDICT)
-        assert str(input_type) == "<class 'cog.predictor.Input'>", (
+        assert str(input_type) == "<class 'geu_cog.predictor.Input'>", (
             "Predict input type should be the predictor Input."
         )
         assert (
             str(output_type)
-            == "<class 'cog.predictor.get_output_type.<locals>.Output'>"
+            == "<class 'geu_cog.predictor.get_output_type.<locals>.Output'>"
         ), "Predict output type should be the predictor Output."
         assert not is_async, "is_async should be False for normal functions"
 
@@ -196,7 +196,7 @@ def test_get_predictor_types_with_async():
             handle.write("""
 import io
 
-from cog import BasePredictor, Path
+from geu_cog import BasePredictor, Path
 from typing import Optional
 from pydantic import BaseModel
 
@@ -215,12 +215,12 @@ class Predictor(BasePredictor):
         predict_ref = f"{predict_python_file}:Predictor"
         config = Config(config={"predict": predict_ref})
         input_type, output_type, is_async = config.get_predictor_types(Mode.PREDICT)
-        assert str(input_type) == "<class 'cog.predictor.Input'>", (
+        assert str(input_type) == "<class 'geu_cog.predictor.Input'>", (
             "Predict input type should be the predictor Input."
         )
         assert (
             str(output_type)
-            == "<class 'cog.predictor.get_output_type.<locals>.Output'>"
+            == "<class 'geu_cog.predictor.get_output_type.<locals>.Output'>"
         ), "Predict output type should be the predictor Output."
         assert is_async, "is_async should be True for async functions"
 
@@ -230,7 +230,7 @@ def test_get_predictor_types_for_train():
         predict_python_file = os.path.join(tmpdir, "train.py")
         with open(predict_python_file, "w", encoding="utf-8") as handle:
             handle.write("""
-from cog import BaseModel, Input, Path
+from geu_cog import BaseModel, Input, Path
 
 class TrainingOutput(BaseModel):
     weights: Path
@@ -249,7 +249,7 @@ def train(
         train_ref = f"{predict_python_file}:train"
         config = Config(config={"train": train_ref})
         input_type, output_type, is_async = config.get_predictor_types(Mode.TRAIN)
-        assert str(input_type) == "<class 'cog.predictor.TrainingInput'>", (
+        assert str(input_type) == "<class 'geu_cog.predictor.TrainingInput'>", (
             "Predict input type should be the training Input."
         )
         assert str(output_type).endswith("TrainingOutput'>"), (
@@ -263,7 +263,7 @@ def test_get_predictor_types_for_train_with_async():
         predict_python_file = os.path.join(tmpdir, "train.py")
         with open(predict_python_file, "w", encoding="utf-8") as handle:
             handle.write("""
-from cog import BaseModel, Input, Path
+from geu_cog import BaseModel, Input, Path
 
 class TrainingOutput(BaseModel):
     weights: Path
@@ -282,7 +282,7 @@ async def train(
         train_ref = f"{predict_python_file}:train"
         config = Config(config={"train": train_ref})
         input_type, output_type, is_async = config.get_predictor_types(Mode.TRAIN)
-        assert str(input_type) == "<class 'cog.predictor.TrainingInput'>", (
+        assert str(input_type) == "<class 'geu_cog.predictor.TrainingInput'>", (
             "Predict input type should be the training Input."
         )
         assert str(output_type).endswith("TrainingOutput'>"), (

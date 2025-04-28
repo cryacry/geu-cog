@@ -391,7 +391,7 @@ func (g *FastGenerator) installSrc(lines []string, weights []weights.Weight) ([]
 
 	// Copy over source / without weights
 	if !g.localImage {
-		copyCommand := "COPY --link --exclude='.cog' "
+		copyCommand := "COPY --link --exclude='.geu_cog' "
 		for _, weight := range weights {
 			copyCommand += "--exclude='" + weight.Path + "' "
 		}
@@ -428,7 +428,7 @@ func (g *FastGenerator) entrypoint(lines []string) ([]string, error) {
 		"WORKDIR /src",
 		"ENV VERBOSE=0",
 		"ENTRYPOINT [\"/usr/bin/tini\", \"--\", \"/opt/r8/monobase/exec.sh\"]",
-		"CMD [\"python\", \"-m\", \"cog.server.http\"]",
+		"CMD [\"python\", \"-m\", \"geu_cog.server.http\"]",
 	}...), nil
 }
 
@@ -438,7 +438,7 @@ func (g *FastGenerator) generateAptTarball(tmpDir string) (string, error) {
 
 func (g *FastGenerator) validateConfig() error {
 	if len(g.Config.Build.Run) > 0 {
-		return errors.New("cog builds with --x-fast do not support build run commands.")
+		return errors.New("geu_cog builds with --x-fast do not support build run commands.")
 	}
 	return nil
 }

@@ -129,7 +129,7 @@ func (p *Predictor) waitForContainerReady(timeout time.Duration) error {
 		if err := json.NewDecoder(resp.Body).Decode(healthcheck); err != nil {
 			return fmt.Errorf("Container healthcheck returned invalid response: %w", err)
 		}
-		// These status values are defined in python/cog/server/http.py
+		// These status values are defined in python/geu_cog/server/http.py
 		switch healthcheck.Status {
 		case "STARTING":
 			continue
@@ -238,17 +238,17 @@ func (p *Predictor) buildInputValidationErrorMessage(errorResponse *ValidationEr
 	}
 
 	return fmt.Errorf(
-		`The inputs you passed to cog %[1]s could not be validated:
+		`The inputs you passed to geu_cog %[1]s could not be validated:
 
 %[2]s
 
 You can provide an input with -i. For example:
 
-    cog %[1]s -i blur=3.5
+    geu_cog %[1]s -i blur=3.5
 
 If your input is a local file, you need to prefix the path with @ to tell Cog to read the file contents. For example:
 
-    cog %[1]s -i path=@image.jpg`,
+    geu_cog %[1]s -i path=@image.jpg`,
 		command,
 		strings.Join(errorMessages, "\n"),
 	)

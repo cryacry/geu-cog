@@ -9,7 +9,7 @@ def test_train_takes_input_and_produces_weights(tmpdir_factory):
     out_dir = pathlib.Path(tmpdir_factory.mktemp("project"))
     shutil.copytree(project_dir, out_dir, dirs_exist_ok=True)
     result = subprocess.run(
-        ["cog", "train", "--debug", "-i", "n=42"],
+        ["geu_cog", "train", "--debug", "-i", "n=42"],
         cwd=out_dir,
         check=False,
         capture_output=True,
@@ -26,7 +26,7 @@ def test_train_pydantic2(tmpdir_factory):
     out_dir = pathlib.Path(tmpdir_factory.mktemp("project"))
     shutil.copytree(project_dir, out_dir, dirs_exist_ok=True)
     result = subprocess.run(
-        ["cog", "train", "--debug", "-i", 'some_input="hello"'],
+        ["geu_cog", "train", "--debug", "-i", 'some_input="hello"'],
         cwd=out_dir,
         check=False,
         capture_output=True,

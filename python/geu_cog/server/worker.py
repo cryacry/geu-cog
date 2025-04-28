@@ -65,7 +65,7 @@ _spawn = multiprocessing.get_context("spawn")
 
 _PublicEventType = Union[Done, Log, PredictionOutput, PredictionOutputType]
 
-log = structlog.get_logger("cog.server.worker")
+log = structlog.get_logger("geu_cog.server.worker")
 
 
 @unique

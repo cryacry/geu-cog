@@ -101,7 +101,7 @@ func BuildAddLabelsAndSchemaToImage(image string, labels map[string]string, bund
 	cmd := exec.Command("docker", args...)
 
 	dockerfile := "FROM " + image + "\n"
-	dockerfile += "COPY " + bundledSchemaFile + " .cog\n"
+	dockerfile += "COPY " + bundledSchemaFile + " .geu_cog\n"
 	cmd.Stdin = strings.NewReader(dockerfile)
 
 	console.Debug("$ " + strings.Join(cmd.Args, " "))

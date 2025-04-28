@@ -1,0 +1,6 @@
+build:
+  python_version: "3.11"
+  python_requirements: "requirements.txt"
+predict: "predict.py:Predictor"
+openapi_prefix: "zjut-video-server"
+

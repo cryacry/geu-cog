@@ -6,8 +6,8 @@ var (
 	BuildTime             = "none"
 	Debug                 = false
 	ProfilingEnabled      = false
-	ConfigFilename        = "cog.yaml"
+	ConfigFilename        = "geu_cog.yaml"
 	ReplicateRegistryHost = "r8.im"
 	ReplicateWebsiteHost  = "replicate.com"
-	LabelNamespace        = "run.cog."
+	LabelNamespace        = "run.geu_cog."
 )

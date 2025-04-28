@@ -76,8 +76,8 @@ func findFullWeights(folder string, weights []Weight, weightFile string) ([]Weig
 			return nil
 		}
 
-		// Skip the .cog directory when looking for weights - this is where we store cog generated files
-		if info.IsDir() && info.Name() == ".cog" {
+		// Skip the .geu_cog directory when looking for weights - this is where we store geu_cog generated files
+		if info.IsDir() && info.Name() == ".geu_cog" {
 			return filepath.SkipDir
 		}
 

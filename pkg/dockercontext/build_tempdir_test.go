@@ -11,5 +11,5 @@ func TestBuildCogTempDir(t *testing.T) {
 	tmpDir := t.TempDir()
 	cogTmpDir, err := BuildCogTempDir(tmpDir, "weights")
 	require.NoError(t, err)
-	require.Equal(t, filepath.Join(tmpDir, ".cog/tmp/weights"), cogTmpDir)
+	require.Equal(t, filepath.Join(tmpDir, ".geu_cog/tmp/weights"), cogTmpDir)
 }

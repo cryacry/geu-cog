@@ -11,7 +11,7 @@ def pytest_sessionstart(session):
 
 @pytest.fixture
 def docker_image_name():
-    return "cog-test-" + random_string(10)
+    return "geu_cog-test-" + random_string(10)
 
 
 @pytest.fixture

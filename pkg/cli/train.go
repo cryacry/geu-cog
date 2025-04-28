@@ -116,7 +116,7 @@ func cmdTrain(cmd *cobra.Command, args []string) error {
 		Image:   imageName,
 		Volumes: volumes,
 		Env:     trainEnvFlags,
-		Args:    []string{"python", "-m", "cog.server.http", "--x-mode", "train"},
+		Args:    []string{"python", "-m", "geu_cog.server.http", "--x-mode", "train"},
 	}, true, buildFast, dockerCommand)
 	if err != nil {
 		return err

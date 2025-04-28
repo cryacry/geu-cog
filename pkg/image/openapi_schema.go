@@ -27,7 +27,7 @@ func GenerateOpenAPISchema(imageName string, enableGPU bool) (map[string]any, er
 	err := docker.RunWithIO(docker.RunOptions{
 		Image: imageName,
 		Args: []string{
-			"python", "-m", "cog.command.openapi_schema",
+			"python", "-m", "geu_cog.command.openapi_schema",
 		},
 		GPUs: gpus,
 	}, nil, &stdout, &stderr)

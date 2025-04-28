@@ -15,7 +15,7 @@ func GeneratePipFreeze(imageName string, fastFlag bool) (string, error) {
 
 	args := []string{"python", "-m", "pip", "freeze"}
 	var env []string
-	// Fast-push builds with monobase has 3 disjoint venvs, base, cog & user
+	// Fast-push builds with monobase has 3 disjoint venvs, base, geu_cog & user
 	// Freeze user layer only
 	if fastFlag {
 		args = []string{"uv", "pip", "freeze"}

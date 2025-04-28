@@ -96,7 +96,7 @@ def test_webhook_includes_user_agent():
 
     assert len(responses.calls) == 1
     user_agent = responses.calls[0].request.headers["user-agent"]
-    assert user_agent.startswith("cog-worker/")
+    assert user_agent.startswith("geu_cog-worker/")
 
 
 @responses.activate

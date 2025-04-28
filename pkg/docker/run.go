@@ -61,7 +61,7 @@ func generateDockerArgs(options internalRunOptions) []string {
 		"--shm-size", "6G",
 		// https://github.com/pytorch/pytorch/issues/2244
 		// https://github.com/replicate/cog/issues/1293
-		// TODO: relative to pwd and cog.yaml
+		// TODO: relative to pwd and geu_cog.yaml
 	}
 
 	if options.Detach {

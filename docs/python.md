@@ -323,7 +323,7 @@ class Predictor(BasePredictor):
     def predict(self, image: Path = Input(description="Image to enlarge")) -> Path:
         upscaled_image = do_some_processing(image)
 
-        # To output `cog.Path` objects the file needs to exist, so create a temporary file first.
+        # To output `geu_cog.Path` objects the file needs to exist, so create a temporary file first.
         # This file will automatically be deleted by Cog after it has been returned.
         output_path = Path(tempfile.mkdtemp()) / "upscaled.png"
         upscaled_image.save(output_path)
@@ -388,7 +388,7 @@ The corresponding cog command:
 ```bash
 $ echo test1 > 1.txt
 $ echo test2 > 2.txt
-$ cog predict -i paths=@1.txt -i paths=@2.txt
+$ geu_cog predict -i paths=@1.txt -i paths=@2.txt
 Running prediction...
 test1
 

@@ -9,7 +9,7 @@ PathLike = Union[Path, str, None]
 
 
 class ProbeHelper:
-    _root = Path("/var/run/cog")
+    _root = Path("/var/run/geu_cog")
     _enabled = False
 
     def __init__(self, root: PathLike = None) -> None:
@@ -24,8 +24,8 @@ class ProbeHelper:
             self._root.mkdir(exist_ok=True, parents=True)
         except OSError:
             log.error(
-                "Failed to create cog runtime state directory (%s). "
-                "Does it already exist and is a file? Does the user running cog "
+                "Failed to create geu_cog runtime state directory (%s). "
+                "Does it already exist and is a file? Does the user running geu_cog "
                 "have permissions?",
                 self._root,
             )

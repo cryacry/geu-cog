@@ -27,7 +27,7 @@ func NewBaseImageRootCommand() (*cobra.Command, error) {
 		Use:     "base-image",
 		Short:   "Cog base image commands. This is an experimental feature with no guarantees of future support.",
 		Version: fmt.Sprintf("%s (built %s)", global.Version, global.BuildTime),
-		// This stops errors being printed because we print them in cmd/cog/cog.go
+		// This stops errors being printed because we print them in cmd/geu_cog/geu_cog.go
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			if global.Debug {
 				console.SetLevel(console.DebugLevel)

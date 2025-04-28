@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const CogBuildArtifactsFolder = ".cog"
+const CogBuildArtifactsFolder = ".geu_cog"
 
 func CogTempDir(dir string, contextDir string) string {
 	return path.Join(dir, CogBuildArtifactsFolder, "tmp", contextDir)
@@ -21,7 +21,7 @@ func BuildCogTempDir(dir string, subDir string) (string, error) {
 }
 
 func BuildTempDir(dir string) (string, error) {
-	// tmpDir ends up being something like dir/.cog/tmp/build20240620123456.000000
+	// tmpDir ends up being something like dir/.geu_cog/tmp/build20240620123456.000000
 	now := time.Now().Format("20060102150405.000000")
 	return BuildCogTempDir(dir, "build"+now)
 }

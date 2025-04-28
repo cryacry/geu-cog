@@ -15,7 +15,7 @@ from packaging.version import VERSION_PATTERN
 SEMVER_PATTERN = r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
 
 
-# Used to help ensure that the cog binary reports a semver version that matches
+# Used to help ensure that the geu_cog binary reports a semver version that matches
 # the PEP440 version of the embedded Python package.
 #
 # These are all valid pairs:
@@ -135,7 +135,7 @@ def cog_server_http_run(project_dir: str):
     try:
         server = subprocess.Popen(
             [
-                "cog",
+                "geu_cog",
                 "serve",
                 "-p",
                 str(port),

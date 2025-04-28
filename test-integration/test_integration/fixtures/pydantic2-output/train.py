@@ -37,7 +37,7 @@ def train(
     Minimal example to demonstrate issues with Secret inputs.
     """
     print("\n=== Minimal Cog Secret Test ===")
-    print(f"cog version: {os.environ.get('COG_VERSION', 'unknown')}")
+    print(f"geu_cog version: {os.environ.get('COG_VERSION', 'unknown')}")
     
     # Inputs with None defaults
     print("\n-- Inputs with None defaults (problematic) --")

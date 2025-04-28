@@ -285,7 +285,7 @@ def test_openapi_specification_with_yield(client):
         "items": {
             "type": "string",
         },
-        "x-cog-array-type": "iterator",
+        "x-geu_cog-array-type": "iterator",
     }
 
 
@@ -301,8 +301,8 @@ def test_openapi_specification_with_yield_with_concatenate_iterator(client):
         "items": {
             "type": "string",
         },
-        "x-cog-array-type": "iterator",
-        "x-cog-array-display": "concatenate",
+        "x-geu_cog-array-type": "iterator",
+        "x-geu_cog-array-display": "concatenate",
     }
 
 

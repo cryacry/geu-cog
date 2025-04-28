@@ -27,7 +27,7 @@ from .predictor import (
 from .types import CogConfig
 from .wait import wait_for_env
 
-COG_YAML_FILE = "cog.yaml"
+COG_YAML_FILE = "geu_cog.yaml"
 COG_PREDICT_TYPE_STUB_ENV_VAR = "COG_PREDICT_TYPE_STUB"
 COG_TRAIN_TYPE_STUB_ENV_VAR = "COG_TRAIN_TYPE_STUB"
 COG_PREDICT_CODE_STRIP_ENV_VAR = "COG_PREDICT_CODE_STRIP"
@@ -37,7 +37,7 @@ COG_MAX_CONCURRENCY_ENV_VAR = "COG_MAX_CONCURRENCY"
 PREDICT_METHOD_NAME = "predict"
 TRAIN_METHOD_NAME = "train"
 
-log = structlog.get_logger("cog.config")
+log = structlog.get_logger("geu_cog.config")
 
 
 def _method_name_from_mode(mode: Mode) -> str:
@@ -57,7 +57,7 @@ def _env_var_from_mode(mode: Mode) -> str:
 
 
 class Config:
-    """A class for reading the cog.yaml properties."""
+    """A class for reading the geu_cog.yaml properties."""
 
     def __init__(self, config: Optional[CogConfig] = None) -> None:
         self._config = config
@@ -99,7 +99,7 @@ class Config:
     @property
     @env_property(COG_GPU_ENV_VAR)
     def requires_gpu(self) -> bool:
-        """Whether this cog requires the use of a GPU."""
+        """Whether this geu_cog requires the use of a GPU."""
         return bool(self._cog_config.get("build", {}).get("gpu", False))
 
     @property
@@ -107,6 +107,18 @@ class Config:
     def max_concurrency(self) -> int:
         """The maximum concurrency of predictions supported by this model. Defaults to 1."""
         return int(self._cog_config.get("concurrency", {}).get("max", 1))
+
+    @property
+    def openapi_prefix(self) -> str:
+        """The maximum concurrency of predictions supported by this model. Defaults to 1."""
+        prefix = self._cog_config.get("openapi_prefix", "/")
+        if prefix == "/":
+            return prefix
+        if prefix[-1] == "/":
+            prefix = prefix[:-1]
+        if prefix[0] != "/":
+            prefix = "/" + prefix
+        return prefix
 
     def _predictor_code(
         self,
@@ -156,7 +168,7 @@ class Config:
             predictor_ref = self.predictor_train_ref
         if predictor_ref is None:
             raise ValueError(
-                f"Can't run predictions: '{mode}' option not found in cog.yaml"
+                f"Can't run predictions: '{mode}' option not found in geu_cog.yaml"
             )
         return predictor_ref
 

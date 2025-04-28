@@ -162,7 +162,7 @@ func TestPythonPackagesAndRequirementsCantBeUsedTogether(t *testing.T) {
 	}
 	err := config.ValidateAndComplete("")
 	require.Error(t, err)
-	require.Contains(t, err.Error(), "Only one of python_packages or python_requirements can be set in your cog.yaml, not both")
+	require.Contains(t, err.Error(), "Only one of python_packages or python_requirements can be set in your geu_cog.yaml, not both")
 }
 
 func TestPythonRequirementsResolvesPythonPackagesAndCudaVersions(t *testing.T) {

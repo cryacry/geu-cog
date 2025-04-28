@@ -201,7 +201,7 @@ func (c *Client) versionFromManifest(image string, weights []File, files []File,
 	var cogConfig config.Config
 	err = json.Unmarshal([]byte(manifest.Config.Labels[command.CogConfigLabelKey]), &cogConfig)
 	if err != nil {
-		return nil, util.WrapError(err, "failed to get cog config from docker image")
+		return nil, util.WrapError(err, "failed to get geu_cog config from docker image")
 	}
 
 	var openAPISchema map[string]any
@@ -307,7 +307,7 @@ func (c *Client) versionFromManifest(image string, weights []File, files []File,
 		Challenges:    fileChallenges,
 	}
 
-	if pushID, ok := manifest.Config.Labels["run.cog.push_id"]; ok {
+	if pushID, ok := manifest.Config.Labels["run.geu_cog.push_id"]; ok {
 		version.PushID = pushID
 	}
 
@@ -354,7 +354,7 @@ func stripCodeFromStub(cogConfig config.Config, isPredict bool) (string, error) 
 	}
 
 	// TODO: We should attempt to strip the code here, in python this is done like so:
-	// from cog.code_xforms import strip_model_source_code
+	// from geu_cog.code_xforms import strip_model_source_code
 	// code = strip_model_source_code(
 	//   util.read_file(os.path.join(fs, 'src', base_file)),
 	//   [base_class],
@@ -362,7 +362,7 @@ func stripCodeFromStub(cogConfig config.Config, isPredict bool) (string, error) 
 	// )
 	// Currently the behavior of the code strip attempts to strip, and if it can't it
 	// loads the whole file in. Here we just load the whole file in.
-	// We should figure out a way to call cog python from here to fulfill this.
+	// We should figure out a way to call geu_cog python from here to fulfill this.
 	// It could be a good idea to do this in the layer functions where we do pip freeze
 	// et al.
 

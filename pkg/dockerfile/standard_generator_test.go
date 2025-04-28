@@ -98,21 +98,21 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(false)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
+FROM r8.im/replicate/geu_cog-test-weights AS weights
 FROM python:3.12-slim
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/local/nvidia/lib64:/usr/local/nvidia/bin
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ` + testTini() + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -133,11 +133,11 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(false)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
+FROM r8.im/replicate/geu_cog-test-weights AS weights
 FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -145,10 +145,10 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/local/nvidia
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ` + testTini() + testInstallPython("3.12") + "RUN rm -rf /usr/bin/python3 && ln -s `realpath \\`pyenv which python\\`` /usr/bin/python3 && chmod +x /usr/bin/python3" + `
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -177,11 +177,11 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(false)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
+FROM r8.im/replicate/geu_cog-test-weights AS weights
 FROM python:3.12-slim
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -193,11 +193,11 @@ ENV CFLAGS="-O3 -funroll-loops -fno-strict-aliasing -flto -S"
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r /tmp/requirements.txt
 ENV CFLAGS=
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 	require.Equal(t, expected, actual)
 
@@ -232,11 +232,11 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(false)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
+FROM r8.im/replicate/geu_cog-test-weights AS weights
 FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -249,11 +249,11 @@ ENV CFLAGS="-O3 -funroll-loops -fno-strict-aliasing -flto -S"
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r /tmp/requirements.txt
 ENV CFLAGS=
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -283,11 +283,11 @@ build:
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(false)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
+FROM r8.im/replicate/geu_cog-test-weights AS weights
 FROM python:3.12-slim
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -295,11 +295,11 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/local/nvidia
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ` + testTini() + `RUN --mount=type=cache,target=/var/cache/apt,sharing=locked apt-get update -qq && apt-get install -qqy cowsay && rm -rf /var/lib/apt/lists/*
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 	require.Equal(t, expected, actual)
 
@@ -320,7 +320,7 @@ build:
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(false)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 	fmt.Println(actual)
 	require.Contains(t, actual, `pip install -r /tmp/requirements.txt`)
@@ -383,7 +383,7 @@ predict: predict.py:Predictor
 		return nil
 	}
 
-	modelDockerfile, runnerDockerfile, dockerignore, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	modelDockerfile, runnerDockerfile, dockerignore, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
@@ -397,7 +397,7 @@ COPY root-large /src/root-large`
 
 	// model copy should be run before dependency install and code copy
 	expected = `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
+FROM r8.im/replicate/geu_cog-test-weights AS weights
 FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -410,14 +410,14 @@ ENV CFLAGS="-O3 -funroll-loops -fno-strict-aliasing -flto -S"
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r /tmp/requirements.txt
 ENV CFLAGS=
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 RUN cowsay moo
 COPY --from=weights --link /src/checkpoints /src/checkpoints
 COPY --from=weights --link /src/models /src/models
 COPY --from=weights --link /src/root-large /src/root-large
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, runnerDockerfile)
@@ -428,7 +428,7 @@ COPY . /src`
 torch==2.0.1
 pandas==2.0.3`, string(requirements))
 
-	expected = `# generated by replicate/cog
+	expected = `# generated by replicate/geu_cog
 __pycache__
 *.pyc
 *.pyo
@@ -483,10 +483,10 @@ ENV PYTHONUNBUFFERED=1
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/local/nvidia/lib64:/usr/local/nvidia/bin
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ` + testTini() + testInstallCog(gen.relativeTmpDir, gen.strip) + `
-RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/cog.conf && ldconfig
+RUN find / -type f -name "*python*.so" -printf "%h\n" | sort -u > /etc/ld.so.conf.d/geu_cog.conf && ldconfig
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -507,16 +507,16 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(true)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
-FROM r8.im/cog-base:python3.12
+FROM r8.im/replicate/geu_cog-test-weights AS weights
+FROM r8.im/geu_cog-base:python3.12
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -544,12 +544,12 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(true)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
-FROM r8.im/cog-base:python3.12
+FROM r8.im/replicate/geu_cog-test-weights AS weights
+FROM r8.im/geu_cog-base:python3.12
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked apt-get update -qq && apt-get install -qqy cowsay && rm -rf /var/lib/apt/lists/*
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
 COPY ` + gen.relativeTmpDir + `/requirements.txt /tmp/requirements.txt
@@ -559,7 +559,7 @@ ENV CFLAGS=
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 	require.Equal(t, expected, actual)
 
@@ -595,7 +595,7 @@ predict: predict.py:Predictor
 		gen, err := NewStandardGenerator(conf, tmpDir, command)
 		require.NoError(t, err)
 		gen.SetUseCogBaseImage(true)
-		_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+		_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 		require.NoError(t, err)
 
 		// We add the patch version to the expected torch version
@@ -604,8 +604,8 @@ predict: predict.py:Predictor
 			expectedTorchVersion = "2.3.1"
 		}
 		expected := fmt.Sprintf(`#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
-FROM r8.im/cog-base:cuda11.8-python3.11-torch%s
+FROM r8.im/replicate/geu_cog-test-weights AS weights
+FROM r8.im/geu_cog-base:cuda11.8-python3.11-torch%s
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked apt-get update -qq && apt-get install -qqy cowsay && rm -rf /var/lib/apt/lists/*
 `+testInstallCog(gen.relativeTmpDir, gen.strip)+`
 COPY `+gen.relativeTmpDir+`/requirements.txt /tmp/requirements.txt
@@ -615,7 +615,7 @@ ENV CFLAGS=
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`, expectedTorchVersion)
 
 		require.Equal(t, expected, actual)
@@ -654,12 +654,12 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(true)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
-FROM r8.im/cog-base:cuda11.8-python3.12-torch2.3.1
+FROM r8.im/replicate/geu_cog-test-weights AS weights
+FROM r8.im/geu_cog-base:cuda11.8-python3.12-torch2.3.1
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked apt-get update -qq && apt-get install -qqy cowsay && rm -rf /var/lib/apt/lists/*
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
 COPY ` + gen.relativeTmpDir + `/requirements.txt /tmp/requirements.txt
@@ -669,7 +669,7 @@ ENV CFLAGS=
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -707,12 +707,12 @@ predict: predict.py:Predictor
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(true)
 	gen.SetStrip(true)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
-FROM r8.im/cog-base:cuda11.8-python3.12-torch2.3.1
+FROM r8.im/replicate/geu_cog-test-weights AS weights
+FROM r8.im/geu_cog-base:cuda11.8-python3.12-torch2.3.1
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked apt-get update -qq && apt-get install -qqy cowsay && rm -rf /var/lib/apt/lists/*
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
 COPY ` + gen.relativeTmpDir + `/requirements.txt /tmp/requirements.txt
@@ -722,7 +722,7 @@ ENV CFLAGS=
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)
@@ -759,7 +759,7 @@ predict: predict.py:Predictor
 	gen, err := NewStandardGenerator(conf, tmpDir, command)
 	require.NoError(t, err)
 	gen.SetUseCogBaseImage(true)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	require.NotContains(t, actual, "-march=native")
@@ -793,12 +793,12 @@ predict: predict.py:Predictor
 	gen.SetUseCogBaseImage(true)
 	gen.SetStrip(true)
 	gen.SetPrecompile(true)
-	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/cog-test")
+	_, actual, _, err := gen.GenerateModelBaseWithSeparateWeights("r8.im/replicate/geu_cog-test")
 	require.NoError(t, err)
 
 	expected := `#syntax=docker/dockerfile:1.4
-FROM r8.im/replicate/cog-test-weights AS weights
-FROM r8.im/cog-base:cuda11.8-python3.12-torch2.3.1
+FROM r8.im/replicate/geu_cog-test-weights AS weights
+FROM r8.im/geu_cog-base:cuda11.8-python3.12-torch2.3.1
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked apt-get update -qq && apt-get install -qqy cowsay && rm -rf /var/lib/apt/lists/*
 ` + testInstallCog(gen.relativeTmpDir, gen.strip) + `
 COPY ` + gen.relativeTmpDir + `/requirements.txt /tmp/requirements.txt
@@ -809,7 +809,7 @@ RUN find / -type f -name "*.py[co]" -delete && find / -type f -name "*.py" -exec
 RUN cowsay moo
 WORKDIR /src
 EXPOSE 5000
-CMD ["python", "-m", "cog.server.http"]
+CMD ["python", "-m", "geu_cog.server.http"]
 COPY . /src`
 
 	require.Equal(t, expected, actual)

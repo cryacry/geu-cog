@@ -26,10 +26,10 @@ import (
 	"github.com/replicate/cog/pkg/weights"
 )
 
-const dockerignoreBackupPath = ".dockerignore.cog.bak"
-const weightsManifestPath = ".cog/cache/weights_manifest.json"
-const bundledSchemaFile = ".cog/openapi_schema.json"
-const bundledSchemaPy = ".cog/schema.py"
+const dockerignoreBackupPath = ".dockerignore.geu_cog.bak"
+const weightsManifestPath = ".geu_cog/cache/weights_manifest.json"
+const bundledSchemaFile = ".geu_cog/openapi_schema.json"
+const bundledSchemaPy = ".geu_cog/schema.py"
 
 var errGit = errors.New("git error")
 
@@ -37,7 +37,7 @@ var errGit = errors.New("git error")
 //
 // This is separated out from docker.Build(), so that can be as close as possible to the behavior of 'docker build'.
 func Build(cfg *config.Config, dir, imageName string, secrets []string, noCache, separateWeights bool, useCudaBaseImage string, progressOutput string, schemaFile string, dockerfileFile string, useCogBaseImage *bool, strip bool, precompile bool, fastFlag bool, annotations map[string]string, localImage bool) error {
-	console.Infof("Building Docker image from environment in cog.yaml as %s...", imageName)
+	console.Infof("Building Docker image from environment in geu_cog.yaml as %s...", imageName)
 	if fastFlag {
 		console.Info("Fast build enabled.")
 	}
@@ -89,7 +89,7 @@ func Build(cfg *config.Config, dir, imageName string, secrets []string, noCache,
 		if generator.IsUsingCogBaseImage() {
 			cogBaseImageName, err = generator.BaseImage()
 			if err != nil {
-				return fmt.Errorf("Failed to get cog base image name: %s", err)
+				return fmt.Errorf("Failed to get geu_cog base image name: %s", err)
 			}
 		}
 
@@ -201,21 +201,21 @@ func Build(cfg *config.Config, dir, imageName string, secrets []string, noCache,
 	}
 
 	if cogBaseImageName != "" {
-		labels[global.LabelNamespace+"cog-base-image-name"] = cogBaseImageName
+		labels[global.LabelNamespace+"geu_cog-base-image-name"] = cogBaseImageName
 
 		ref, err := name.ParseReference(cogBaseImageName)
 		if err != nil {
-			return fmt.Errorf("Failed to parse cog base image reference: %w", err)
+			return fmt.Errorf("Failed to parse geu_cog base image reference: %w", err)
 		}
 
 		img, err := remote.Image(ref)
 		if err != nil {
-			return fmt.Errorf("Failed to fetch cog base image: %w", err)
+			return fmt.Errorf("Failed to fetch geu_cog base image: %w", err)
 		}
 
 		layers, err := img.Layers()
 		if err != nil {
-			return fmt.Errorf("Failed to get layers for cog base image: %w", err)
+			return fmt.Errorf("Failed to get layers for geu_cog base image: %w", err)
 		}
 
 		if len(layers) == 0 {
@@ -225,14 +225,14 @@ func Build(cfg *config.Config, dir, imageName string, secrets []string, noCache,
 		lastLayerIndex := len(layers) - 1
 		layerLayerDigest, err := layers[lastLayerIndex].DiffID()
 		if err != nil {
-			return fmt.Errorf("Failed to get last layer digest for cog base image: %w", err)
+			return fmt.Errorf("Failed to get last layer digest for geu_cog base image: %w", err)
 		}
 
 		lastLayer := layerLayerDigest.String()
-		console.Debugf("Last layer of the cog base image: %s", lastLayer)
+		console.Debugf("Last layer of the geu_cog base image: %s", lastLayer)
 
-		labels[global.LabelNamespace+"cog-base-image-last-layer-sha"] = lastLayer
-		labels[global.LabelNamespace+"cog-base-image-last-layer-idx"] = fmt.Sprintf("%d", lastLayerIndex)
+		labels[global.LabelNamespace+"geu_cog-base-image-last-layer-sha"] = lastLayer
+		labels[global.LabelNamespace+"geu_cog-base-image-last-layer-idx"] = fmt.Sprintf("%d", lastLayerIndex)
 	}
 
 	if commit, err := gitHead(dir); commit != "" && err == nil {
@@ -262,7 +262,7 @@ func BuildBase(cfg *config.Config, dir string, useCudaBaseImage string, useCogBa
 	// https://github.com/replicate/cog/issues/80
 	imageName := config.BaseDockerImageName(dir)
 
-	console.Info("Building Docker image from environment in cog.yaml...")
+	console.Info("Building Docker image from environment in geu_cog.yaml...")
 	command := docker.NewDockerCommand()
 	generator, err := dockerfile.NewGenerator(cfg, dir, false, command, false)
 	if err != nil {
@@ -384,7 +384,7 @@ func makeDockerignoreForWeightsImage() error {
 }
 
 func writeDockerignore(contents string) error {
-	// read existing file contents from .dockerignore.cog.bak if it exists, and append to the new contents
+	// read existing file contents from .dockerignore.geu_cog.bak if it exists, and append to the new contents
 	if _, err := os.Stat(dockerignoreBackupPath); err == nil {
 		existingContents, err := os.ReadFile(dockerignoreBackupPath)
 		if err != nil {
@@ -434,8 +434,8 @@ func checkCompatibleDockerIgnore(dir string) error {
 	if matcher == nil {
 		return nil
 	}
-	if matcher.MatchesPath(".cog") {
-		return errors.New("The .cog tmp path cannot be ignored by docker in .dockerignore.")
+	if matcher.MatchesPath(".geu_cog") {
+		return errors.New("The .geu_cog tmp path cannot be ignored by docker in .dockerignore.")
 	}
 	return nil
 }

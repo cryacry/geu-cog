@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       model_name:
-        description: 'Enter the model name, like "alice/bunny-detector". If unset, this will default to the value of `image` in cog.yaml.'
+        description: 'Enter the model name, like "alice/bunny-detector". If unset, this will default to the value of `image` in geu_cog.yaml.'
   # # Uncomment these lines to trigger the workflow on every push to the main branch
   # push:
   #   branches:
@@ -41,13 +41,13 @@ jobs:
           # the action will authenticate with Replicate automatically so you
           # can push your model without needing to pass in a token.
           # 
-          # To genereate a CLI auth token, run `cog login` or visit this page
+          # To genereate a CLI auth token, run `geu_cog login` or visit this page
           # in your browser: https://replicate.com/account/api-token
           token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
 
       # If you trigger the workflow manually, you can specify the model name.
       # If you leave it blank (or if the workflow is triggered by a push), the 
-      # model name will be derived from the `image` value in cog.yaml.
+      # model name will be derived from the `image` value in geu_cog.yaml.
       - name: Push to Replicate
         run: |
           if [ -n "${{ inputs.model_name }}" ]; then

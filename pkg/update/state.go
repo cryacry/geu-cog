@@ -72,7 +72,7 @@ func writeState(s *state) error {
 }
 
 func userDir() (string, error) {
-	return homedir.Expand("~/.config/cog")
+	return homedir.Expand("~/.config/geu_cog")
 }
 
 func statePath() (string, error) {
