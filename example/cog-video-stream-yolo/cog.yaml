@@ -2,5 +2,6 @@ build:
   python_version: "3.11"
   python_requirements: "requirements.txt"
 predict: "predict.py:Predictor"
-openapi_prefix: "zjut-video-server"
+openapi_prefix: "211ff222-f705-4n77-8c4a-48113e755fca"
+server_name: "yolo8-video-server"
 

@@ -120,6 +120,12 @@ class Config:
             prefix = "/" + prefix
         return prefix
 
+    @property
+    def server_name(self) -> str:
+        """The maximum concurrency of predictions supported by this model. Defaults to 1."""
+        server_name = self._cog_config.get("server_name", "geu-ai")
+        return server_name
+
     def _predictor_code(
         self,
         module_path: str,

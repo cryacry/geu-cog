@@ -147,7 +147,7 @@ def create_app(  # pylint: disable=too-many-arguments,too-many-locals,too-many-s
         worker.terminate()
 
     app = MyFastAPI(  # pylint: disable=redefined-outer-name
-        title="Cog",  # TODO: mention model name?
+        title=cog_config.server_name,  # TODO: mention model name?
         # version=None # TODO
         lifespan=lifespan
     )
